@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 
 # Function to predict stock prices
+# Function to predict stock prices
 default_start_date = datetime.today() - timedelta(days=365)
 def predict_stock_price(stock_data):
     # Feature engineering (assuming simple linear regression)
