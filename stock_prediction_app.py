@@ -236,7 +236,7 @@ if stock_symbol and start_date and end_date:
     - Special thanks to  DR D.J.S SAKO for their valuable contributions.
 
 
-    *Built by DE.2017/4538 - ORAGWA CHINONYEREM LAWRENCE :heart:*
+    *Built by - ORAGWA CHINONYEREM LAWRENCE :heart:*
     """,
     unsafe_allow_html=True,
 )
