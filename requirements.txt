@@ -16,7 +16,7 @@ charset-normalizer==2.0.12
 click==8.1.7
 cmdstanpy==0.9.5
 colorama==0.4.3
-contourpy==1.1.1
+# contourpy==1.1.1
 convertdate==2.4.0
 coverage==7.3.2
 cryptography==37.0.4
