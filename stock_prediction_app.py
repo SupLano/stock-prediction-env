@@ -1,9 +1,12 @@
 import streamlit as st
-import matplotlib.pyplot as plt
 import yfinance as yf
+import pandas as pd
+import plotly.graph_objects as go
 from datetime import datetime, timedelta
 from sklearn.model_selection import train_test_split
-from sklearn.linear_model import LinearRegression
+from sklearn.svm import SVR as MyCustomSVM
+
+
 
 # Function to predict stock prices
 # Function to predict stock prices
@@ -27,7 +30,7 @@ def predict_stock_price(stock_data):
 
 
     # Create and train the linear regression model
-    model = LinearRegression()
+    model = MyCustomSVM()
     model.fit(X_train, y_train)
 
     # Predict stock prices
@@ -162,9 +165,17 @@ end_date = col3.date_input("End Date:")
 if stock_symbol and start_date and end_date:
     stock_data = yf.download(stock_symbol, start=start_date, end=end_date)
 
-    # Display stock data with company name
+    # Create a custom function to apply color based on price comparison
+    def color_price(val):
+        color = 'color: red' if val < stock_data['Close'].iloc[-1] else 'color: green'
+        return color
+
+    # Apply the custom function to the DataFrame
+    styled_stock_data = stock_data.style.applymap(color_price, subset=pd.IndexSlice[:, 'Open':'Volume'])
+
+    # Display the styled DataFrame
     st.subheader(f"Historical Stock Data for {popular_stocks.get(stock_symbol, 'Unknown Company')}")
-    st.dataframe(stock_data, width=1000, height=500)
+    st.dataframe(styled_stock_data, width=1000, height=500)
 
     # Model prediction (use your prediction model here)
     prediction = predict_stock_price(stock_data)
@@ -175,26 +186,29 @@ if stock_symbol and start_date and end_date:
     price_color = "green" if prediction > last_actual_price else "red"
 
     # Create a figure and axis for the chart
-    fig, ax = plt.subplots(figsize=(8, 4))
+    # ... Your previous code ...
+
+# Create a Plotly figure with a full-width layout
+    fig = go.Figure()
 
     # Plot the historical stock data
-    ax.plot(stock_data.index, stock_data['Close'], label='Historical Data', color='blue')
+    fig.add_trace(go.Scatter(x=stock_data.index, y=stock_data['Close'], mode='lines', name='Historical Data', line=dict(color='blue')))
 
     # Plot the predicted stock price
-    ax.axvline(stock_data.index[-1], color='gray', linestyle='--', label='Last Data Point')
-    ax.plot(stock_data.index[-1], prediction, 'ro', label='Predicted Price', markersize=10)
+    fig.add_trace(go.Scatter(x=[stock_data.index[-1]], y=[prediction], mode='markers', name='Predicted Price', marker=dict(color=price_color, size=10)))
 
     # Set chart labels and title
-    ax.set_xlabel("Date")
-    ax.set_ylabel("Stock Price")
-    ax.set_title(f"Stock Price Prediction for {popular_stocks.get(stock_symbol, 'Unknown Company')}")
+    fig.update_layout(
+        title=f"Stock Price Prediction for {popular_stocks.get(stock_symbol, 'Unknown Company')}",
+        xaxis_title="Date",
+        yaxis_title="Stock Price"
+    )
 
-    # Add legend
-    ax.legend()
+    # Set the width of the Plotly chart to occupy full width
+    fig.update_layout(width=1000)  # You can adjust the width as needed
 
-    # Display the chart in Streamlit
-    st.pyplot(fig)
-
+    # Show the chart using st.plotly_chart
+    st.plotly_chart(fig, use_container_width=True)  # use_container_width=True for full width
 
     # Display the prediction with the determined color
     st.subheader("Result")
@@ -222,7 +236,7 @@ if stock_symbol and start_date and end_date:
     - Special thanks to   DR D.J.S SAKO   for their valuable contributions.
 
 
-    *Built with :heart: by Your ORAGWA CHINONYEREM LAWRENCE*
+    *Built by DE.2017/4538 - ORAGWA CHINONYEREM LAWRENCE :heart:*
     """,
     unsafe_allow_html=True,
 )
