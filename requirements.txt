@@ -11,7 +11,7 @@ plotly==5.17.0
 pystan==2.19.1.1
 scikit-learn==1.0.2
 setuptools-git==1.2
-statsmodels==0.14.0
+statsmodels==0.13.5
 streamlit==1.27.2
 tqdm==4.66.1
 updates==0.1.7.1
